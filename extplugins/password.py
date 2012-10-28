@@ -121,6 +121,7 @@ class PasswordPlugin(b3.plugin.Plugin):
             client.message('Your new password is: %s' %pwd)
         if e == 'Valid':
             self.sendMail(client, pwd, data)
+            self.storeEmail(client, data)
         elif e == 'None':
             pass
         else:
@@ -194,6 +195,9 @@ class PasswordPlugin(b3.plugin.Plugin):
 
     def storePassword(self, client, pwdhash):
         self.console.storage.query(QueryBuilder(self.console.storage.db).UpdateQuery( { 'password' : pwdhash }, 'clients', { 'id' : client.id } ))
+
+    def storeEmail(self, client, email):
+        self.console.storage.query(QueryBuilder(self.console.storage.db).UpdateQuery( { 'login' : email }, 'clients', { 'id' : client.id } ))
 
     def testAvail(self):
         if not self.privateMsg and not self.sendMail:
